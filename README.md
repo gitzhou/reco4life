@@ -1,8 +1,6 @@
 # Reco4life
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/reco4life`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+封装[Reco4life开发者平台](http://www.reco4life.com/wiki/%E9%A6%96%E9%A1%B5)提供的API
 
 ## Installation
 
@@ -22,20 +20,23 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'reco4life'
 
-## Development
+begin
+  Reco4life.user_name = 'your_user_name'
+  Reco4life.api_key ='your_api_key'
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/reco4life.
-
+  Reco4life.devices.each do |sn|
+    next unless Reco4life.online? sn
+    Reco4life.turn_on sn
+    puts Reco4life.powered_on? sn
+  end
+rescue => e
+  puts e
+end
+```
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
+[MIT License](http://opensource.org/licenses/MIT).
