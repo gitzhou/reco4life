@@ -54,8 +54,7 @@ module Reco4life
     end
 
     def token_valid?
-      return true if !@token.nil? && !@token_expire_time.nil? && Time.now < @token_expire_time
-      false
+      @token && !token_expired?
     end
 
     def fetch_devices
@@ -73,6 +72,10 @@ module Reco4life
     def switch(sn, status)
       hash = JSON.parse HTTP[token: @token].get(ITEM_SWITCH % [Reco4life.user_name, sn, status]).to_s
       raise ERROR_CODE_MAP[hash['result'].to_i] if hash['result'] != '1'
+    end
+
+    def token_expired?
+      @token_expire_time && @token_expire_time < Time.now
     end
   end
 end
