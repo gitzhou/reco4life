@@ -28,8 +28,7 @@ begin
   Reco4life.api_key ='your_api_key'
 
   Reco4life.devices.each do |sn|
-    next unless Reco4life.online? sn
-    Reco4life.turn_on sn
+    Reco4life.turn_on(sn) if Reco4life.online?(sn)
     puts Reco4life.powered_on? sn
   end
 rescue => e

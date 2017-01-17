@@ -27,13 +27,11 @@ module Reco4life
     end
 
     def turn_on(sn)
-      return if powered_on?(sn)
-      switch(sn, 1)
+      switch(sn, 1) unless powered_on?(sn)
     end
 
     def turn_off(sn)
-      return unless powered_on?(sn)
-      switch(sn, 0)
+      switch(sn, 0) if powered_on?(sn)
     end
 
     def online?(sn)
@@ -57,6 +55,10 @@ module Reco4life
       @token && !token_expired?
     end
 
+    def token_expired?
+      @token_expire_time && @token_expire_time < Time.now
+    end
+
     def fetch_devices
       refresh_token unless token_valid?
       hash = JSON.parse HTTP[token: @token].get(ITEM_LIST % user_name).to_s
@@ -72,10 +74,6 @@ module Reco4life
     def switch(sn, status)
       hash = JSON.parse HTTP[token: @token].get(ITEM_SWITCH % [Reco4life.user_name, sn, status]).to_s
       raise ERROR_CODE_MAP[hash['result'].to_i] if hash['result'] != '1'
-    end
-
-    def token_expired?
-      @token_expire_time && @token_expire_time < Time.now
     end
   end
 end
